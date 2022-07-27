@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68964bca54033a14186b3c10559c9e40, type: 3}
-  m_Name: Example String
+  m_Script: {fileID: 11500000, guid: 3b850253e69260e4390a06039e0a5559, type: 3}
+  m_Name: CurHealth
   m_EditorClassIdentifier: 
-  initialValue: 
-  runtimeValue: 
+  initialValue: 0
+  runtimeValue: 0
   runtimeMode: 0
   persistenceMode: 0
