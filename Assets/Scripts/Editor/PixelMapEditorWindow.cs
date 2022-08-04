@@ -28,6 +28,7 @@ public class PixelMapEditorWindow : EditorWindow
         GUILayout.Label("Generate Map", EditorStyles.boldLabel);
         
         _mapImage = EditorGUILayout.ObjectField(("Map Image"), _mapImage, typeof(Texture2D), false) as Texture2D;
-        mappedElement = EditorGUILayout.
+        //mappedElement = EditorGUILayout.ObjectField();
+        
     }
 }
