@@ -9,7 +9,7 @@ using UnityEditor;
 public class TestEditorWindow : EditorWindow
 {
     //This is the menu, sub menu and window names
-    [MenuItem("Rubber Duck/Tool Windows/Test Window")]
+    [MenuItem("Window/Rubber Duck/Test Window")]
     //This public static function is what creates the window
     public static void ShowWindow()
     {
@@ -75,7 +75,7 @@ public class TestEditorWindow : EditorWindow
 
                 for (int i = _sceneParent.childCount - 1; i > 0; i--)
                 {
-                    Destroy(_sceneParent.GetChild(i).gameObject);
+                    DestroyImmediate(_sceneParent.GetChild(i).gameObject);
                 }
             }
         }
