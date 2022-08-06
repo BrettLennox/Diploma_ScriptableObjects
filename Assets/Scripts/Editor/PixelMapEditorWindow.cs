@@ -2,6 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using Unity.Mathematics;
+using System.IO;
 
 public class PixelMapEditorWindow : EditorWindow
 {
@@ -13,6 +14,7 @@ public class PixelMapEditorWindow : EditorWindow
 
     private Texture2D _mapImage;
     private GameObject _mapParent;
+    private string _mapName;
 
     [System.Serializable]
     public struct Mappings
@@ -21,17 +23,15 @@ public class PixelMapEditorWindow : EditorWindow
         public Color spawnColour;
     }
 
-    private int _mappedElementSize;
     public Mappings[] mappedElement;
     private Color _pixelColour;
-    private bool test = true;
 
     private void OnGUI()
     {
         GUILayout.Label("Generate Map", EditorStyles.boldLabel);
 
-        _mapImage = EditorGUILayout.ObjectField(("Map Image"), _mapImage, typeof(Texture2D), false) as Texture2D;
-        _mapParent = EditorGUILayout.ObjectField("Map Parent GameObject", _mapParent, typeof(GameObject), true) as GameObject;
+        _mapImage = EditorGUILayout.ObjectField(new GUIContent("Map Image", "The image containing colour data for the tool to create the map."), _mapImage, typeof(Texture2D), false) as Texture2D;
+        _mapName = EditorGUILayout.TextField(new GUIContent("Map Name", "The name for the parent GameObject containing the created map data."), _mapName);
 
         ScriptableObject target = this;
         SerializedObject so = new SerializedObject(target);
@@ -43,14 +43,11 @@ public class PixelMapEditorWindow : EditorWindow
         {
             GenerateMapData();
         }
-        if(_mapParent != null && _mapParent.transform.childCount > 0)
+        if (_mapParent != null && _mapParent.transform.childCount > 0)
         {
-            if(GUILayout.Button("Clear Parent Map Data"))
+            if (GUILayout.Button("Clear Map Data"))
             {
-                for(int i = _mapParent.transform.childCount - 1; i >= 0; i--)
-                {
-                    DestroyImmediate(_mapParent.transform.GetChild(i).gameObject);
-                }
+                DestroyImmediate(_mapParent);
             }
         }
     }
@@ -58,12 +55,18 @@ public class PixelMapEditorWindow : EditorWindow
     private void GenerateMapData()
     {
         if (_mapImage == null) { Debug.LogError("Map Image is null. Please select a Texture2D image."); }
-        else if(_mapParent == null) { Debug.LogError("Map Parent Gameobject has not been defined"); }
+        else if(_mapName == string.Empty) { Debug.LogError("Please enter a name for the map."); }
         else if(_mapParent != null && _mapParent.transform.childCount > 0) { Debug.LogError("Map data already exists within selected parent gameobject."); }
-        else { GenerateLevel(); }
+        else 
+        { 
+            GenerateLevel();
+        }
+        
     }
+
     void GenerateObject(int x, int y)
     {
+        
         //read pixel colours
         _pixelColour = _mapImage.GetPixel(x, y);
         if (_pixelColour.a == 0)
@@ -86,6 +89,7 @@ public class PixelMapEditorWindow : EditorWindow
 
     void GenerateLevel()
     {
+        _mapParent = new GameObject(_mapName);
         //scan whole texture and get pixel positions
         for (int x = 0; x < _mapImage.width; x++)
         {
