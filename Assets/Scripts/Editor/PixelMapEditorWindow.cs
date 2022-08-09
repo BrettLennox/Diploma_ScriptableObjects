@@ -26,6 +26,8 @@ public class PixelMapEditorWindow : EditorWindow
     public Mappings[] mappedElement;
     private Color _pixelColour;
 
+    private string _pathDirectory = "Assets/Resources/MapData/";
+
     private void OnGUI()
     {
         GUILayout.Label("Generate Map", EditorStyles.boldLabel);
@@ -45,6 +47,10 @@ public class PixelMapEditorWindow : EditorWindow
         }
         if (_mapParent != null && _mapParent.transform.childCount > 0)
         {
+            if (GUILayout.Button("Generate Prefab From MapData"))
+            {
+                GeneratePrefab();
+            }
             if (GUILayout.Button("Clear Map Data"))
             {
                 DestroyImmediate(_mapParent);
@@ -61,7 +67,6 @@ public class PixelMapEditorWindow : EditorWindow
         { 
             GenerateLevel();
         }
-        
     }
 
     void GenerateObject(int x, int y)
@@ -97,6 +102,21 @@ public class PixelMapEditorWindow : EditorWindow
             {
                 GenerateObject(x, y);
             }
+        }
+    }
+
+    void GeneratePrefab()
+    {
+        if (Directory.Exists(_pathDirectory))
+        {
+            string localPath = _pathDirectory + _mapParent.name + ".prefab";
+            PrefabUtility.SaveAsPrefabAsset(_mapParent, localPath);
+            AssetDatabase.Refresh();
+        }
+        else
+        {
+            Directory.CreateDirectory(_pathDirectory);
+            AssetDatabase.Refresh();
         }
     }
 }
