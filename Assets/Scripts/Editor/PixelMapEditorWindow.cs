@@ -12,48 +12,55 @@ public class PixelMapEditorWindow : EditorWindow
         GetWindow(typeof(PixelMapEditorWindow));
     }
 
-    private Texture2D _mapImage;
-    private GameObject _mapParent;
-    private string _mapName;
+    private Texture2D _mapImage; // The Image that displays the maps colours
+    private GameObject _mapParent; //The parent GameObject that holds the generated map data
+    private string _mapName; //The name of the mapParent that is created
 
     [System.Serializable]
-    public struct Mappings
+    public struct Mappings //Struct containing the object to spawn and the colour to match them with
     {
         public GameObject spawnObj;
         public Color spawnColour;
     }
 
-    public Mappings[] mappedElement;
-    private Color _pixelColour;
+    public Mappings[] mappedElement; //Array for the Mapping data
+    private Color _pixelColour; //Color for checking the map image
 
-    private string _pathDirectory = "Assets/Resources/MapData/";
+    private string _pathDirectory = "Assets/Resources/MapData/"; //string reference to the PathDirectory to save the prefab to
+
+    private SerializedObject sObj; //SerializedObject for displaying the array in the Editor
+
+    private void OnEnable()
+    {
+        sObj = new SerializedObject(this); //sets the sObj to this script which inherits from EditorWindow which inherits from ScriptableObject
+    }
 
     private void OnGUI()
     {
-        GUILayout.Label("Generate Map", EditorStyles.boldLabel);
+        GUILayout.Label("Generate Map", EditorStyles.boldLabel); //Creates a label at the top of the EditorWindow with set information
 
+        //Creates an ObjectField in the EditorWindow that contains Texture2D information and updates _mapImage to it
         _mapImage = EditorGUILayout.ObjectField(new GUIContent("Map Image", "The image containing colour data for the tool to create the map."), _mapImage, typeof(Texture2D), false) as Texture2D;
+        //Creates a TextField in the EditorWindow that contains string information and updates _mapName to it
         _mapName = EditorGUILayout.TextField(new GUIContent("Map Name", "The name for the parent GameObject containing the created map data."), _mapName);
 
-        ScriptableObject target = this;
-        SerializedObject so = new SerializedObject(target);
-        SerializedProperty mappedElementProperty = so.FindProperty("mappedElement");
-        EditorGUILayout.PropertyField(mappedElementProperty, true);
-        so.ApplyModifiedProperties();
+        //Creates a PropertyField in the EditorWindow that displays the mappedElement array information
+        EditorGUILayout.PropertyField(sObj.FindProperty("mappedElement"), true);
+        sObj.ApplyModifiedProperties(); //Applies the updated information in the array PropertyField to the SerializedObject
 
-        if (GUILayout.Button("Generate Map Data"))
+        if (GUILayout.Button("Generate Map Data")) //If the user presses the GenerateMapData button
         {
-            GenerateMapData();
+            GenerateMapData();//Run this function
         }
-        if (_mapParent != null && _mapParent.transform.childCount > 0)
+        if (_mapParent != null && _mapParent.transform.childCount > 0) //If mapParent is not null and contains children
         {
-            if (GUILayout.Button("Generate Prefab From MapData"))
+            if (GUILayout.Button("Generate Prefab From MapData")) //If the user presses GeneratePrefabFromMapData button
             {
-                GeneratePrefab();
+                GeneratePrefab(); //Run this function
             }
-            if (GUILayout.Button("Clear Map Data"))
+            if (GUILayout.Button("Clear Map Data")) //If the user presses the ClearMapData button
             {
-                DestroyImmediate(_mapParent);
+                DestroyImmediate(_mapParent); //Destroy _mapParent GameObject
             }
         }
     }
