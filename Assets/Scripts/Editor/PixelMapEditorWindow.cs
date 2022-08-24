@@ -1,7 +1,6 @@
 using System;
 using UnityEditor;
 using UnityEngine;
-using Unity.Mathematics;
 using System.IO;
 
 public class PixelMapEditorWindow : EditorWindow
@@ -94,7 +93,7 @@ public class PixelMapEditorWindow : EditorWindow
                 //turn the pixel x and y into Vector2 position
                 Vector2 pos = new Vector2(x, y);
                 //Spawn object that matches pixel colour at pixel position
-                Instantiate(colourMapping.spawnObj, pos, quaternion.identity, _mapParent.transform);
+                Instantiate(colourMapping.spawnObj, pos, Quaternion.identity, _mapParent.transform);
             }
         }
     }

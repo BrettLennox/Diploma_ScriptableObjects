@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class PixelMap : MonoBehaviour
@@ -36,7 +35,7 @@ public class PixelMap : MonoBehaviour
                 //turn the pixel x and y into Vector2 position
                 Vector2 pos = new Vector2(x, y);
                 //Spawn object that matches pixel colour at pixel position
-                Instantiate(colourMapping.spawnObj, pos, quaternion.identity, transform);
+                Instantiate(colourMapping.spawnObj, pos, Quaternion.identity, transform);
             }
         }
     }
