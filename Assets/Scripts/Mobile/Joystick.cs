@@ -136,7 +136,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         }
         return Vector2.zero;
     }
-    public void OnDrag(PointerEventData eventData)
+    public virtual void OnDrag(PointerEventData eventData)
     {
         if (_cam = null)
         {
@@ -153,15 +153,16 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         Vector2 position = RectTransformUtility.WorldToScreenPoint(_cam, background.position);
         Vector2 radius = background.sizeDelta / 2;
         input = (eventData.position - position) / (radius * _canvas.scaleFactor);
+        FormatInput();
         HandleInput(input.magnitude, input.normalized, radius, _cam);
         _handle.anchoredPosition = input * radius * HandleRange;
         //if this plays up we will be changing HandleRange to _handleRange
     }
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         OnDrag(eventData);
     }
-    public void OnPointerUp(PointerEventData eventData)
+    public virtual void OnPointerUp(PointerEventData eventData)
     {
         input = Vector2.zero;
         _handle.anchoredPosition = Vector2.zero;
